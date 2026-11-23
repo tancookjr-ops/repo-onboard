@@ -4,7 +4,7 @@ One job: after the staging check passes, make the staging build the live site an
 
 ## Inputs
 - Working (this run): the staging check passed on the current `[[branches.staging]]` tip
-- Reference (every run): `../../../_shared/release-process.md`
+- Reference (every run): `../../../[[paths.release_doc]]`
 
 Do NOT load: anything else — this step is a button and a note.
 

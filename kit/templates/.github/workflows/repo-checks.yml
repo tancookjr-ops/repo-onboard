@@ -1,0 +1,29 @@
+name: Repo checks
+
+# Installed by repo-onboard for repos that keep their OWN deploy workflows: runs the
+# onboarding gates (every scripts/check-* and the mirror-drift check) on pull requests
+# into [[branches.staging]] and on pushes to it. Deploys are untouched.
+on:
+  pull_request:
+    branches: [[[branches.staging]]]
+  push:
+    branches: [[[branches.staging]]]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - name: Project checks (scripts/check-*)
+        run: |
+          shopt -s nullglob
+          for c in scripts/check-*; do
+            echo "▶ $c"
+            case "$c" in *.mjs|*.js) node "$c" ;; *.sh) bash "$c" ;; *.py) python3 "$c" ;; esac
+          done
+      - name: Mirrored copies match the live files
+        run: '[ ! -f scripts/sync-mirrors.sh ] || bash scripts/sync-mirrors.sh --check'

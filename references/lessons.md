@@ -16,6 +16,7 @@ run cost, and what the patch does instead.
 | 9 | Three pull requests, each merged by hand, deploy checked by asking the owner | 3 manual merges, waiting | One PR; auto-merge (if allowed) → watch the run → read logs → fix loop |
 | 10 | actionlint install blocked by the session's safety check | none, but unverified | Not attempted; `verify.sh` checks YAML parse + SHA pins instead and says so |
 | 11 | Recipes added to code don't reach phones with saved data (found late) | owner surprise | Rule §1 + the proposal call out "saved data wins" for any app with local storage |
+| 12 | (BorealCodex, before its run) a repo with its own `AGENTS.md` maps, `docs/` shelf, `SECRETS.md` and VPS deploy workflows named like the kit's | would have been clobbered or duplicated | `existing.py` adopts its layout; `apply.py` never overwrites; merge policy; `preserved.py` gate; deploy module off |
 
 The order that would have been fastest — and is the patch's order:
 **device → inventory → one intake → one approval → apply everything → verify against real

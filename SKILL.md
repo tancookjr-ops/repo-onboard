@@ -1,6 +1,6 @@
 ---
 name: repo-onboard
-description: Install and configure the full "sharons-cookbook" setup on another repo in one guided pass — ICM workspace (CLAUDE.md map, CONTEXT.md contracts, pipelines with human checkpoints), BorealCodex-derived rules and working practices, GitHub Actions deploys (staging on push, one-click promote, GitHub Pages fallback with a sandboxed /staging/, optional FTP), mirror-drift and content checks, Dependabot cooldown, SHA-pinned actions, and optional import of a design-tool backup zip. Use when the user asks to onboard, set up, bootstrap, patch or "update this repo the same way" as sharons-cookbook, or to apply the repo-onboard patch.
+description: Shorthand trigger — "onboard this repo with repo-onboard". Install and configure the full "sharons-cookbook" setup on another repo in one guided pass, adapting to (never overwriting) the repo's existing agent docs, rules and workflows — ICM workspace (CLAUDE.md map, CONTEXT.md contracts, pipelines with human checkpoints), BorealCodex-derived rules and working practices, GitHub Actions deploys (staging on push, one-click promote, GitHub Pages fallback with a sandboxed /staging/, optional FTP), mirror-drift and content checks, Dependabot cooldown, SHA-pinned actions, and optional import of a design-tool backup zip. Use when the user asks to onboard, set up, bootstrap, patch or "update this repo the same way" as sharons-cookbook, or to apply the repo-onboard patch.
 ---
 
 # repo-onboard — the installation and configuration patch
@@ -26,7 +26,13 @@ Question bank and answer mapping: `intake/questions.md`.
    the default branch only if the owner said to).
 
 ## Phase 1 — Inventory (automatic, read-only)
-`python3 -I kit/scripts/inventory.py <repo> --json <scratchpad>/facts.json`.
+`python3 -I kit/scripts/inventory.py <repo> --json <scratchpad>/facts.json` and
+`python3 -I kit/scripts/existing.py <repo> --json <scratchpad>/existing.json` — the second
+finds the repo's OWN agent docs, rules, secrets/runbooks and workflows: which entry file
+is canonical, the folder-map file name, the knowledge shelf, ICM conformance, which
+onboarding rule topics they already cover, duplicated facts, workflow name collisions,
+and proposes `paths` + `modules` (e.g. deploy off when the repo deploys itself).
+Record the base ref now (`git rev-parse origin/<staging>`) for the Phase 5 preservation check.
 Use the facts to **prefill every intake default**: branches, staging/production guess,
 storage prefixes (sandbox), mirror candidates, CDN tags without integrity, design backup,
 personal emails, lockfiles ignored. Also read the README and any existing CLAUDE.md /
@@ -47,29 +53,36 @@ recommended option first, defaults from Phase 1). Every question also accepts fr
 ## Phase 3 — Proposal and approval (the one gate before changes)
 Show in one message: target tree, migration map (old → new → role, from icm-architect
 restructure mode), files to be written, duplicates → mirror/archive/delete, automation
-level, the owner's settings checklist. Ask **Approve / Change something** with
+level, the owner's settings checklist — and, when the repo has its own docs, the
+**merge plan** from `references/merge-policy.md`: conventions adopted, ICM fixes (moves,
+never rewording), per topic keep / add / ignore, and the true conflicts as questions. Ask **Approve / Change something** with
 AskUserQuestion. Nothing is written before "Approve". If the owner chose "delete" for a
 duplicate, that is the only deletion the patch makes.
 
 ## Phase 4 — Apply (automatic)
 1. Design backup (if any): `bash kit/scripts/import-design-backup.sh <repo> <zip-or-url>`
    (applies the known tool fixes itself), then remove duplicates the owner chose to delete.
-2. `python3 -I kit/apply.py answers.json <repo>` — fresh repo: add `--force` only for files
-   that do not exist yet (no flag needed). Each conflict leaves `<file>.onboard-new`: merge it
-   by hand into the existing file (keep the project's facts, add the patch's structure),
-   then delete the `.onboard-new`.
-3. Fill every `{{FILL: …}}` in `work/*/NN_*/CONTEXT.md` with **icm-architect** (build mode,
+2. `python3 -I kit/apply.py answers.json <repo>` — writes only files that don't exist, in the
+   repo's own conventions (`paths`), for the chosen `modules`. It never overwrites: each
+   existing file stays as is and gets a `<file>.onboard-new` beside it.
+3. **Merge** every `.onboard-new` by `references/merge-policy.md` (keep theirs, add only
+   what is missing, ignore what doesn't apply, move — never reword — to reach ICM shape),
+   log each decision in `<archive_dir>/onboarding-merge.md`, ask the owner only about
+   true conflicts, then delete the `.onboard-new` files.
+4. Fill every `{{FILL: …}}` in the `work/*/NN_*/` contracts (`CONTEXT.md` or the repo's floor-file name) with **icm-architect** (build mode,
    step 4) from what the inventory and README show. Add a content checker as
    `scripts/check-<thing>.(mjs|sh|py)` if the content has a structure (see sharons-cookbook's
    `scripts/check-recipes.mjs` for the pattern). Leave a `{{FILL}}` only if the owner must decide.
-4. `bash scripts/sync-mirrors.sh` (mirrors start identical).
-5. Supply chain: un-ignore and commit lockfiles of any tooling, `npm ci --ignore-scripts`.
+5. `bash scripts/sync-mirrors.sh` (mirrors start identical).
+6. Supply chain: un-ignore and commit lockfiles of any tooling, `npm ci --ignore-scripts`.
 
 ## Phase 5 — Verify (automatic; never open a PR on a FAIL)
 `bash kit/scripts/verify.sh <repo> <staging> <production>` — packages the working tree as
 staging AND the live production branch as production, runs every `scripts/check-*`, mirror
 check, SHA-pin check, CLAUDE.md length, walk test. On FAIL: read the output, fix, re-run.
 A production *warning* (live site already missing a file) is reported, not blocking.
+Then `python3 -I kit/scripts/preserved.py <repo> <base-ref>` — must print `✔ preserved`
+(every line of every pre-existing doc and workflow still exists somewhere).
 
 ## Phase 6 — Ship (automatic up to the automation level chosen)
 1. One commit per concern on the onboard branch (Conventional Commits), push.
@@ -77,7 +90,8 @@ A production *warning* (live site already missing a file) is reported, not block
 3. `auto_merge: true` → merge it (`merge_pull_request`, method from answers) — **only if the
    owner's settings checklist items that block the first deploy are confirmed done** (Pages
    source = GitHub Actions). Otherwise stop and say what is missing.
-4. Watch **Deploy to Staging** for the merge commit (`actions_list` → the run for that
+4. Watch **Deploy to Staging** (or, when the repo keeps its own deploys, its own staging
+   workflow and **Repo checks**) for the merge commit (`actions_list` → the run for that
    commit). Don't sleep-poll in the foreground; wait with the tools the session offers.
 5. Failure → `get_job_logs` (failed only) → diagnose from the exact text → fix on a new
    `<work_prefix>onboard-fix-N` branch from the staging branch → verify → PR → merge → watch.

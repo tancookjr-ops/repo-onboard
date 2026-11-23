@@ -18,13 +18,13 @@ Installed by repo-onboard. The owner works mostly from: **[[environment.device]]
 8. **Report honestly:** what was run, what it printed, what was *not* verified.
 
 ## Finding your way (the ICM walk)
-1. Start at `CLAUDE.md`; follow the route for the job. **Never read the whole repo to orient.**
-2. Each folder that does a job has a `CONTEXT.md`: read it, load only what it lists.
+1. Start at `[[paths.entry_file]]`; follow the route for the job. **Never read the whole repo to orient.**
+2. Each folder that does a job has a `[[paths.floor_file]]`: read it, load only what it lists.
 3. Reference-only places (`_archive/`, anything marked reference) are for history, not building.
 4. **Lost? No matching route? Ask — don't wander.**
 
 ## Pickup / handoff
-- **"pickup"** → read `CLAUDE.md`, the newest entry in `work/LEDGER.md`, then derive status
+- **"pickup"** → read `[[paths.entry_file]]`, the newest entry in `work/LEDGER.md`, then derive status
   (`CONTEXT.md` → Status). Brief the owner in a few lines.
 - **"handoff"** → add an entry at the top of `work/LEDGER.md`: date, what changed (with pull
   request links), what waits on the owner, what is next. Commit it with the work.
