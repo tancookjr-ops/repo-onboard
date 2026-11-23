@@ -13,6 +13,14 @@ inventory already settles beyond doubt, and say so in the proposal instead.
 | What should the patch install? (multi-select) | ICM workspace + rules · Deploy workflows (Pages + FTP) · Design-tool backup import · Supply-chain guards (Dependabot, pins, lockfiles) | which phases/templates run |
 | Have you set Settings → Pages → Source to "GitHub Actions" for this repo? (link it) | Done · Not yet (show me) · Not using GitHub Pages | `hosting.pages_switched` |
 
+## Round A2 — the repo's own setup (only when existing.py found agent docs or workflows)
+| Question | Options | → answers |
+|---|---|---|
+| Your map lives in `<canonical>`, folder maps are `<floor name>`, reference docs in `<shelf>/`. Keep that layout? | **Yes — onboarding writes into your layout (Recommended)** · Switch to CLAUDE.md + CONTEXT.md + `_shared/` | `paths` |
+| You already deploy with `<workflows>`. What should the patch do about deploys? | **Keep yours; add only the checks gate (Recommended)** · Add Pages/FTP alongside | `modules.deploy`, `modules.checks_workflow` |
+| When your rules and the onboarding rules cover the same thing differently, which wins? | **Yours, and ask me about real conflicts (Recommended)** · Onboarding's, and ask me · Ask me every time | merge policy step 3/5 |
+| Your docs are not fully in ICM shape (`<✖ checks>`). Re-home them? | **Move content to where it belongs, never reword (Recommended)** · Leave them as they are | merge policy step 2 |
+
 ## Round B — branches and hosting
 | Question | Options | → answers |
 |---|---|---|

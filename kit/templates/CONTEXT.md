@@ -15,8 +15,7 @@ The jobs, most frequent first. All of them end in the same release line.
 
 ## Hosting
 
-GitHub Pages hosts production (`[[pages.url]]`) and a sandboxed staging
-(`[[pages.url]]staging/`)[[@ftp_sentence]]. Details: `_shared/release-process.md`.
+[[@hosting_paragraph]]
 
 ## Status — derive it, don't store it
 

@@ -3,8 +3,8 @@
 [[project.summary]]
 
 Built on ICM: folders carry sequencing, hierarchy carries context, files carry state.
-If something needs explaining, it goes in that folder's `CONTEXT.md`.
-`AGENTS.md` is a pointer to this file — one map for every assistant.
+If something needs explaining, it goes in that folder's `[[paths.floor_file]]`.
+`[[paths.pointer_file]]` is a pointer to this file — one map for every assistant.
 
 ## Where things live
 
@@ -15,7 +15,7 @@ If something needs explaining, it goes in that folder's `CONTEXT.md`.
 | `work/LEDGER.md` | session handoffs, newest first |
 | `_shared/` | factory: **rules**, working practices, secrets, release process |
 | `_templates/` · `_archive/` | blank starters · what is retired and why |
-| `.github/` 🔒 · `scripts/` 🔒 | deploy automation and checks — guarded (own `CONTEXT.md`) |
+| `.github/` 🔒 · `scripts/` 🔒 | deploy automation and checks — guarded (own `[[paths.floor_file]]`) |
 
 ## Route by job
 

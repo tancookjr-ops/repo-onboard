@@ -10,8 +10,7 @@ other files link here, they don't restate.
    Renaming one silently empties the app for everyone who uses it.
 2. **Changing the saved data's shape needs a migration**, in code, that reads the old
    shape and keeps every field. Test it on staging with a backup restored first.
-3. New storage or cache keys start with one of the prefixes above, so the staging
-   sandbox renames them. *Enforced:* `scripts/package-site.sh` fails staging if an original key survives.
+[[@sandbox_law]]
 4. Never ship a change that can erase data without the app asking first.
 
 ## 2. One source of truth — no second tree
@@ -40,7 +39,7 @@ other files link here, they don't restate.
 Touch these **only when the task explicitly says so**, show the owner an impact
 summary first, and get a yes.
 - `.github/` — workflows and Dependabot (`.github/CONTEXT.md`)
-- `scripts/` — packaging, staging sandbox, checks (`scripts/CONTEXT.md`)
+- `scripts/` — checks and tooling (plus packaging and the staging sandbox when deploys are installed) (`scripts/CONTEXT.md`)
 [[@guarded_extra]]
 
 ## 6. Supply chain
